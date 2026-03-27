@@ -1,7 +1,7 @@
 {
-  "name": "web-meta-analyzer",
-  "version": "1.0.0",
-  "description": "Advanced Web Meta Analyzer - Check Title, AMP, Canonical URL & HTTP Status with CORS Proxy & User-Agent Rotation",
+  "name": "web-meta-analyzer-pro",
+  "version": "2.0.0",
+  "description": "Complete Web Meta Analyzer - Check Title, AMP, Canonical, SSL, DNS, Whois, Security Headers, Social Tags, and More",
   "main": "api/check-domain.js",
   "scripts": {
     "dev": "vercel dev",
@@ -12,13 +12,19 @@
     "meta-analyzer",
     "amp-checker",
     "canonical-checker",
-    "web-analyzer",
-    "cors-proxy"
+    "ssl-checker",
+    "dns-lookup",
+    "whois-checker",
+    "security-headers",
+    "social-tags",
+    "structured-data"
   ],
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "whois": "^2.14.0",
+    "dns": "^0.2.2"
   },
   "devDependencies": {
     "vercel": "^33.0.0"
