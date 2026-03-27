@@ -1,0 +1,15 @@
+{
+  "name": "web-meta-analyzer",
+  "version": "1.0.0",
+  "description": "Web Meta Analyzer - Check Title, AMP, Canonical URL and HTTP Status",
+  "main": "api/check-domain.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "keywords": ["seo", "analyzer", "amp", "canonical", "meta-tag"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
