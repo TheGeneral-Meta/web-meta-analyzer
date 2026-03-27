@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Advanced Web Meta Analyzer - Check Title, AMP, Canonical URL & HTTP Status with CORS Proxy & User-Agent Rotation">
-    <meta name="keywords" content="seo tools, meta analyzer, amp checker, canonical checker, web analyzer">
-    <title>Web Meta Analyzer Pro | SEO & AMP Checker</title>
+    <meta name="description" content="Complete Web Meta Analyzer - Check Title, AMP, Canonical, SSL, DNS, Whois, Security Headers, Social Tags, and More">
+    <title>Web Meta Analyzer Pro | Complete SEO & Security Tool</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
 </head>
@@ -13,12 +12,14 @@
     <div class="container">
         <header>
             <h1>🔍 Web Meta Analyzer Pro</h1>
-            <p>Advanced Title, AMP, Canonical URL & HTTP Status Checker</p>
+            <p>Complete Website Analysis: Meta Tags | SSL | DNS | Security | SEO | Social Media</p>
             <div class="tech-badges">
-                <span class="tech-badge">⚡ DOMParser</span>
-                <span class="tech-badge">🔄 CORS Proxy</span>
-                <span class="tech-badge">🎭 User-Agent Rotate</span>
-                <span class="tech-badge">📊 Real-time</span>
+                <span class="tech-badge">📊 SEO Analysis</span>
+                <span class="tech-badge">🔒 SSL Checker</span>
+                <span class="tech-badge">🌐 DNS Lookup</span>
+                <span class="tech-badge">🛡️ Security Headers</span>
+                <span class="tech-badge">📱 Social Tags</span>
+                <span class="tech-badge">⚡ AMP Checker</span>
             </div>
         </header>
 
@@ -31,14 +32,14 @@
             <div id="singleTab" class="tab-content active">
                 <div class="input-group">
                     <input type="text" id="singleUrl" placeholder="https://example.com or example.com" autocomplete="off">
-                    <button onclick="checkSingle()" class="btn-primary">🚀 Check URL</button>
+                    <button onclick="checkSingle()" class="btn-primary">🚀 Analyze Website</button>
                 </div>
             </div>
 
             <div id="batchTab" class="tab-content">
                 <textarea id="batchUrls" rows="5" placeholder="Enter multiple URLs (one per line)&#10;https://google.com&#10;https://github.com&#10;https://stackoverflow.com"></textarea>
                 <div class="button-group">
-                    <button onclick="checkBatch()" class="btn-primary">📊 Check All URLs</button>
+                    <button onclick="checkBatch()" class="btn-primary">📊 Analyze All</button>
                     <button onclick="loadExamples()" class="btn-secondary">📝 Load Examples</button>
                 </div>
             </div>
@@ -47,11 +48,11 @@
                 <div class="options-left">
                     <label class="checkbox">
                         <input type="checkbox" id="useProxy" checked>
-                        <span>🔄 Use CORS Proxy (fix CORS issues)</span>
+                        <span>🔄 Use CORS Proxy</span>
                     </label>
                     <label class="checkbox">
-                        <input type="checkbox" id="showTime" checked>
-                        <span>⏱️ Show Response Time</span>
+                        <input type="checkbox" id="detailedView" checked>
+                        <span>📊 Detailed View</span>
                     </label>
                 </div>
                 <button onclick="clearAll()" class="btn-clear">🗑️ Clear Results</button>
@@ -60,7 +61,7 @@
 
         <div id="loading" class="loading" style="display: none;">
             <div class="spinner"></div>
-            <p id="loadingText">Processing URLs...</p>
+            <p id="loadingText">Analyzing website...</p>
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
@@ -72,37 +73,31 @@
                 <div class="export-buttons">
                     <button onclick="exportCSV()" class="btn-export">📥 Export CSV</button>
                     <button onclick="exportJSON()" class="btn-export">📄 Export JSON</button>
+                    <button onclick="printReport()" class="btn-export">🖨️ Print Report</button>
                 </div>
             </div>
-            <div class="table-wrapper">
-                <table id="resultsTable">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>URL</th>
-                            <th>Status</th>
-                            <th>Title</th>
-                            <th>Canonical URL</th>
-                            <th>AMP Version</th>
-                            <th id="timeHeader">Response Time</th>
-                            <th>Checked At</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsBody"></tbody>
-                </table>
-            </div>
+            <div id="analysisContent"></div>
         </div>
 
         <div id="empty" class="empty">
-            <div class="empty-icon">📭</div>
-            <h3>No Data Yet</h3>
-            <p>Enter a URL above to start checking website meta information</p>
-            <p class="empty-hint">Supports: HTTP/HTTPS, Multiple URLs, CORS Proxy, User-Agent Rotation</p>
+            <div class="empty-icon">🔍</div>
+            <h3>Ready to Analyze</h3>
+            <p>Enter a URL above to get complete website analysis including:</p>
+            <div class="feature-list">
+                <span>📋 Meta Tags</span>
+                <span>🔒 SSL Certificate</span>
+                <span>🌐 DNS Records</span>
+                <span>🛡️ Security Headers</span>
+                <span>📱 Social Media Tags</span>
+                <span>⚡ AMP Detection</span>
+                <span>📊 Content Analysis</span>
+                <span>🎯 SEO Recommendations</span>
+            </div>
         </div>
 
         <footer>
-            <p>Powered by Vercel Serverless Functions | Advanced Meta Analyzer</p>
-            <p class="footer-features">⚡ Title Checker | 🔗 Canonical Detector | ⚡ AMP Detector | 🌐 CORS Proxy | 🎭 User-Agent Rotate</p>
+            <p>Powered by Vercel Serverless Functions | Complete Website Analysis Tool</p>
+            <p class="footer-features">🔍 Meta Tags | 🔒 SSL | 🌐 DNS | 🛡️ Security | 📱 Social | ⚡ AMP | 📊 SEO</p>
         </footer>
     </div>
 
