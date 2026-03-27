@@ -3,21 +3,52 @@ let isAnalyzing = false;
 
 const API_URL = '/api/check-domain';
 
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+    
+    // Initialize event listeners
+    const singleUrlInput = document.getElementById('singleUrl');
+    if (singleUrlInput) {
+        singleUrlInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkSingle();
+        });
+    }
+    
+    const detailedView = document.getElementById('detailedView');
+    if (detailedView) {
+        detailedView.addEventListener('change', function() {
+            if (allAnalysisResults.length > 0) {
+                renderResultsTable();
+            }
+        });
+    }
+});
+
 function switchTab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    const singleTab = document.getElementById('singleTab');
+    const batchTab = document.getElementById('batchTab');
+    const singleBtn = document.querySelector('.tab-btn:first-child');
+    const batchBtn = document.querySelector('.tab-btn:last-child');
     
     if (tab === 'single') {
-        document.querySelector('.tab-btn:first-child').classList.add('active');
-        document.getElementById('singleTab').classList.add('active');
+        if (singleBtn) singleBtn.classList.add('active');
+        if (batchBtn) batchBtn.classList.remove('active');
+        if (singleTab) singleTab.classList.add('active');
+        if (batchTab) batchTab.classList.remove('active');
     } else {
-        document.querySelector('.tab-btn:last-child').classList.add('active');
-        document.getElementById('batchTab').classList.add('active');
+        if (singleBtn) singleBtn.classList.remove('active');
+        if (batchBtn) batchBtn.classList.add('active');
+        if (singleTab) singleTab.classList.remove('active');
+        if (batchTab) batchTab.classList.add('active');
     }
 }
 
 async function checkSingle() {
-    const url = document.getElementById('singleUrl').value.trim();
+    const urlInput = document.getElementById('singleUrl');
+    if (!urlInput) return;
+    
+    const url = urlInput.value.trim();
     if (!url) {
         showNotification('Please enter a URL', 'error');
         return;
@@ -28,7 +59,10 @@ async function checkSingle() {
 }
 
 async function checkBatch() {
-    const urlsText = document.getElementById('batchUrls').value;
+    const batchUrlsTextarea = document.getElementById('batchUrls');
+    if (!batchUrlsTextarea) return;
+    
+    const urlsText = batchUrlsTextarea.value;
     if (!urlsText.trim()) {
         showNotification('Please enter URLs', 'error');
         return;
@@ -59,6 +93,8 @@ async function analyzeUrls(urls) {
     }
     
     isAnalyzing = true;
+    
+    // Get DOM elements with null checks
     const loading = document.getElementById('loading');
     const resultsContainer = document.getElementById('resultsContainer');
     const emptyDiv = document.getElementById('empty');
@@ -67,21 +103,25 @@ async function analyzeUrls(urls) {
     const progressBar = document.getElementById('progressBar');
     const progressCount = document.getElementById('progressCount');
     
-    loading.style.display = 'block';
-    resultsContainer.style.display = 'none';
-    emptyDiv.style.display = 'none';
-    exportButtons.style.display = 'none';
+    // Hide/show elements safely
+    if (loading) loading.style.display = 'block';
+    if (resultsContainer) resultsContainer.style.display = 'none';
+    if (emptyDiv) emptyDiv.style.display = 'none';
+    if (exportButtons) exportButtons.style.display = 'none';
     
     allAnalysisResults = [];
     let completed = 0;
     
     for (let i = 0; i < urls.length; i++) {
         const url = urls[i];
-        loadingText.textContent = `Analyzing URL ${i + 1} of ${urls.length}`;
-        progressCount.textContent = `${i + 1} / ${urls.length} URLs processed`;
-        progressBar.style.width = `${(i / urls.length) * 100}%`;
         
-        const useProxy = document.getElementById('useProxy').checked;
+        // Update loading text safely
+        if (loadingText) loadingText.textContent = `Analyzing URL ${i + 1} of ${urls.length}`;
+        if (progressCount) progressCount.textContent = `${i + 1} / ${urls.length} URLs processed`;
+        if (progressBar) progressBar.style.width = `${(i / urls.length) * 100}%`;
+        
+        const useProxyCheckbox = document.getElementById('useProxy');
+        const useProxy = useProxyCheckbox ? useProxyCheckbox.checked : true;
         
         try {
             const result = await analyzeUrl(url, useProxy);
@@ -116,15 +156,17 @@ async function analyzeUrls(urls) {
         }
     }
     
-    progressBar.style.width = '100%';
-    loadingText.textContent = 'Complete! Loading results...';
+    // Update progress to 100%
+    if (progressBar) progressBar.style.width = '100%';
+    if (loadingText) loadingText.textContent = 'Complete! Loading results...';
     await delay(500);
     
-    loading.style.display = 'none';
+    // Hide loading, show results
+    if (loading) loading.style.display = 'none';
     
     if (allAnalysisResults.length > 0) {
-        resultsContainer.style.display = 'block';
-        exportButtons.style.display = 'flex';
+        if (resultsContainer) resultsContainer.style.display = 'block';
+        if (exportButtons) exportButtons.style.display = 'flex';
         renderResultsTable();
         updateStatsSummary();
         
@@ -133,7 +175,7 @@ async function analyzeUrls(urls) {
         
         showNotification(`✅ Analysis completed! ${successCount} successful, ${errorCount} failed out of ${allAnalysisResults.length} URLs.`, 'success');
     } else {
-        emptyDiv.style.display = 'block';
+        if (emptyDiv) emptyDiv.style.display = 'block';
         showNotification('No results to display', 'warning');
     }
     
@@ -185,6 +227,8 @@ function extractDomain(url) {
 
 function renderResultsTable() {
     const tbody = document.getElementById('resultsTableBody');
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
     
     allAnalysisResults.forEach((result, index) => {
@@ -198,7 +242,7 @@ function renderResultsTable() {
         urlCell.className = 'url-cell';
         const displayUrl = result.domain || result.url;
         const shortUrl = displayUrl.length > 50 ? displayUrl.substring(0, 47) + '...' : displayUrl;
-        urlCell.innerHTML = `<a href="${result.url}" target="_blank" onclick="event.stopPropagation()" title="${displayUrl}">${shortUrl}</a>`;
+        urlCell.innerHTML = `<a href="${escapeHtml(result.url)}" target="_blank" onclick="event.stopPropagation()" title="${escapeHtml(displayUrl)}">${escapeHtml(shortUrl)}</a>`;
         
         // Status
         const statusCell = row.insertCell(2);
@@ -229,7 +273,7 @@ function renderResultsTable() {
         ampCell.className = 'amp-cell';
         const amp = result.metaData?.amp || '-';
         if (amp !== '-' && amp.includes('http')) {
-            ampCell.innerHTML = `<a href="${amp}" target="_blank" onclick="event.stopPropagation()" title="${amp}">AMP Link</a>`;
+            ampCell.innerHTML = `<a href="${escapeHtml(amp)}" target="_blank" onclick="event.stopPropagation()" title="${escapeHtml(amp)}">AMP Link</a>`;
         } else {
             ampCell.textContent = amp.length > 40 ? amp.substring(0, 37) + '...' : amp;
             ampCell.title = amp;
@@ -246,13 +290,15 @@ function renderResultsTable() {
 }
 
 function updateStatsSummary() {
+    const statsDiv = document.getElementById('statsSummary');
+    if (!statsDiv) return;
+    
     const total = allAnalysisResults.length;
     const success = allAnalysisResults.filter(r => !r.error && r.basicInfo?.statusCode < 400).length;
     const error = allAnalysisResults.filter(r => r.error || r.basicInfo?.statusCode >= 400).length;
     const withCanonical = allAnalysisResults.filter(r => r.metaData?.canonical && r.metaData.canonical !== '-').length;
     const withAmp = allAnalysisResults.filter(r => r.metaData?.amp && r.metaData.amp !== '-').length;
     
-    const statsDiv = document.getElementById('statsSummary');
     statsDiv.innerHTML = `
         <span>📊 Total: ${total}</span>
         <span style="color: #48bb78;">✓ Success: ${success}</span>
@@ -263,10 +309,14 @@ function updateStatsSummary() {
 }
 
 async function openDetails(index) {
+    if (!allAnalysisResults[index]) return;
+    
     const result = allAnalysisResults[index];
     const modal = document.getElementById('detailModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
+    
+    if (!modal || !modalTitle || !modalBody) return;
     
     modalTitle.textContent = `Details: ${result.domain || result.url}`;
     modalBody.innerHTML = '<div class="loading-spinner">Loading details...</div>';
@@ -278,14 +328,16 @@ async function openDetails(index) {
     } else if (!result.error && !result.sslInfo) {
         // Fetch full details if not already fetched
         try {
-            const fullResult = await analyzeUrl(result.url, true);
+            const useProxyCheckbox = document.getElementById('useProxy');
+            const useProxy = useProxyCheckbox ? useProxyCheckbox.checked : true;
+            const fullResult = await analyzeUrl(result.url, useProxy);
             allAnalysisResults[index] = fullResult;
             renderModalDetails(fullResult, modalBody);
             renderResultsTable(); // Update table with any new data
         } catch (error) {
             modalBody.innerHTML = `
                 <div class="status-error" style="padding: 20px; text-align: center;">
-                    ⚠️ Failed to load details: ${error.message}
+                    ⚠️ Failed to load details: ${escapeHtml(error.message)}
                 </div>
             `;
         }
@@ -295,11 +347,13 @@ async function openDetails(index) {
 }
 
 function renderModalDetails(data, container) {
+    if (!container) return;
+    
     if (data.error) {
         container.innerHTML = `
             <div class="status-error" style="padding: 20px; text-align: center;">
-                <h3>⚠️ Error Analyzing ${data.url}</h3>
-                <p>${data.error}</p>
+                <h3>⚠️ Error Analyzing ${escapeHtml(data.url)}</h3>
+                <p>${escapeHtml(data.error)}</p>
             </div>
         `;
         return;
@@ -323,7 +377,9 @@ function renderModalDetails(data, container) {
     document.querySelectorAll('.modal-section-header').forEach(header => {
         header.addEventListener('click', () => {
             const content = header.nextElementSibling;
-            content.classList.toggle('collapsed');
+            if (content) {
+                content.classList.toggle('collapsed');
+            }
         });
     });
 }
@@ -332,7 +388,7 @@ function createModalSection(title, content, isOpen = true) {
     return `
         <div class="modal-section">
             <div class="modal-section-header">
-                <span>${title}</span>
+                <span>${escapeHtml(title)}</span>
                 <span>▼</span>
             </div>
             <div class="modal-section-content ${!isOpen ? 'collapsed' : ''}">
@@ -347,16 +403,16 @@ function createBasicInfoHTML(data) {
         <div class="modal-info-grid">
             <div class="modal-info-item">
                 <div class="modal-info-label">URL</div>
-                <div class="modal-info-value"><a href="${data.url}" target="_blank">${data.url}</a></div>
+                <div class="modal-info-value"><a href="${escapeHtml(data.url)}" target="_blank">${escapeHtml(data.url)}</a></div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Domain</div>
-                <div class="modal-info-value">${data.domain || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(data.domain || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Status Code</div>
                 <div class="modal-info-value ${data.basicInfo?.statusCode < 400 ? 'status-success' : 'status-error'}">
-                    ${data.basicInfo?.statusCode || 'N/A'} ${data.basicInfo?.statusText || ''}
+                    ${data.basicInfo?.statusCode || 'N/A'} ${escapeHtml(data.basicInfo?.statusText || '')}
                 </div>
             </div>
             <div class="modal-info-item">
@@ -365,7 +421,7 @@ function createBasicInfoHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Protocol</div>
-                <div class="modal-info-value">${data.basicInfo?.protocol || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(data.basicInfo?.protocol || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Using Proxy</div>
@@ -373,7 +429,7 @@ function createBasicInfoHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Analyzed At</div>
-                <div class="modal-info-value">${new Date(data.timestamp || Date.now()).toLocaleString()}</div>
+                <div class="modal-info-value">${data.timestamp ? new Date(data.timestamp).toLocaleString() : new Date().toLocaleString()}</div>
             </div>
         </div>
     `;
@@ -398,28 +454,28 @@ function createMetaTagsHTML(data) {
             <div class="modal-info-item">
                 <div class="modal-info-label">Canonical URL</div>
                 <div class="modal-info-value">
-                    ${meta.canonical && meta.canonical !== '-' ? `<a href="${meta.canonical}" target="_blank">${meta.canonical}</a>` : '-'}
+                    ${meta.canonical && meta.canonical !== '-' ? `<a href="${escapeHtml(meta.canonical)}" target="_blank">${escapeHtml(meta.canonical)}</a>` : '-'}
                 </div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">AMP Version</div>
                 <div class="modal-info-value">
                     ${meta.amp && meta.amp !== '-' ? 
-                        (meta.amp.includes('http') ? `<a href="${meta.amp}" target="_blank">${meta.amp}</a>` : 
-                        `<span class="badge badge-success">${meta.amp}</span>`) : '-'}
+                        (meta.amp.includes('http') ? `<a href="${escapeHtml(meta.amp)}" target="_blank">${escapeHtml(meta.amp)}</a>` : 
+                        `<span class="badge badge-success">${escapeHtml(meta.amp)}</span>`) : '-'}
                 </div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Robots</div>
-                <div class="modal-info-value">${meta.robots || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(meta.robots || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Viewport</div>
-                <div class="modal-info-value">${meta.viewport || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(meta.viewport || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Charset</div>
-                <div class="modal-info-value">${meta.charset || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(meta.charset || '-')}</div>
             </div>
         </div>
     `;
@@ -439,19 +495,19 @@ function createOpenGraphHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">OG Image</div>
-                <div class="modal-info-value">${og.image && og.image !== '-' ? `<a href="${og.image}" target="_blank">View Image</a>` : '-'}</div>
+                <div class="modal-info-value">${og.image && og.image !== '-' ? `<a href="${escapeHtml(og.image)}" target="_blank">View Image</a>` : '-'}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">OG URL</div>
-                <div class="modal-info-value">${og.url && og.url !== '-' ? `<a href="${og.url}" target="_blank">${og.url}</a>` : '-'}</div>
+                <div class="modal-info-value">${og.url && og.url !== '-' ? `<a href="${escapeHtml(og.url)}" target="_blank">${escapeHtml(og.url)}</a>` : '-'}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">OG Type</div>
-                <div class="modal-info-value">${og.type || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(og.type || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Site Name</div>
-                <div class="modal-info-value">${og.siteName || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(og.siteName || '-')}</div>
             </div>
         </div>
     `;
@@ -463,7 +519,7 @@ function createTwitterCardHTML(data) {
         <div class="modal-info-grid">
             <div class="modal-info-item">
                 <div class="modal-info-label">Twitter Card</div>
-                <div class="modal-info-value">${twitter.card || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(twitter.card || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Twitter Title</div>
@@ -475,15 +531,15 @@ function createTwitterCardHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Twitter Image</div>
-                <div class="modal-info-value">${twitter.image && twitter.image !== '-' ? `<a href="${twitter.image}" target="_blank">View Image</a>` : '-'}</div>
+                <div class="modal-info-value">${twitter.image && twitter.image !== '-' ? `<a href="${escapeHtml(twitter.image)}" target="_blank">View Image</a>` : '-'}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Twitter Site</div>
-                <div class="modal-info-value">${twitter.site || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(twitter.site || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Twitter Creator</div>
-                <div class="modal-info-value">${twitter.creator || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(twitter.creator || '-')}</div>
             </div>
         </div>
     `;
@@ -492,7 +548,7 @@ function createTwitterCardHTML(data) {
 function createSSLHTML(data) {
     const ssl = data.sslInfo || {};
     if (ssl.error) {
-        return `<div class="status-error">⚠️ ${ssl.error}</div>`;
+        return `<div class="status-error">⚠️ ${escapeHtml(ssl.error)}</div>`;
     }
     
     if (!ssl.valid && !ssl.issuer) {
@@ -511,19 +567,19 @@ function createSSLHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Issuer</div>
-                <div class="modal-info-value">${ssl.issuer || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.issuer || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Subject</div>
-                <div class="modal-info-value">${ssl.subject || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.subject || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Valid From</div>
-                <div class="modal-info-value">${ssl.validFrom || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.validFrom || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Valid To</div>
-                <div class="modal-info-value">${ssl.validTo || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.validTo || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Days Remaining</div>
@@ -531,11 +587,11 @@ function createSSLHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Protocol</div>
-                <div class="modal-info-value">${ssl.protocol || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.protocol || '-')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">Cipher</div>
-                <div class="modal-info-value">${ssl.cipher || '-'}</div>
+                <div class="modal-info-value">${escapeHtml(ssl.cipher || '-')}</div>
             </div>
         </div>
     `;
@@ -544,7 +600,7 @@ function createSSLHTML(data) {
 function createDNSHTML(data) {
     const dns = data.dnsInfo || {};
     if (dns.error) {
-        return `<div class="status-error">⚠️ ${dns.error}</div>`;
+        return `<div class="status-error">⚠️ ${escapeHtml(dns.error)}</div>`;
     }
     
     return `
@@ -580,7 +636,7 @@ function createDNSHTML(data) {
 function createSecurityHeadersHTML(data) {
     const headers = data.securityHeaders || {};
     if (headers.error) {
-        return `<div class="status-error">⚠️ ${headers.error}</div>`;
+        return `<div class="status-error">⚠️ ${escapeHtml(headers.error)}</div>`;
     }
     
     return `
@@ -595,23 +651,23 @@ function createSecurityHeadersHTML(data) {
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">HSTS</div>
-                <div class="modal-info-value">${headers.headers?.strictTransportSecurity || 'Not Set'}</div>
+                <div class="modal-info-value">${escapeHtml(headers.headers?.strictTransportSecurity || 'Not Set')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">CSP</div>
-                <div class="modal-info-value">${headers.headers?.contentSecurityPolicy || 'Not Set'}</div>
+                <div class="modal-info-value">${escapeHtml(headers.headers?.contentSecurityPolicy || 'Not Set')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">X-Frame-Options</div>
-                <div class="modal-info-value">${headers.headers?.xFrameOptions || 'Not Set'}</div>
+                <div class="modal-info-value">${escapeHtml(headers.headers?.xFrameOptions || 'Not Set')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">X-Content-Type-Options</div>
-                <div class="modal-info-value">${headers.headers?.xContentTypeOptions || 'Not Set'}</div>
+                <div class="modal-info-value">${escapeHtml(headers.headers?.xContentTypeOptions || 'Not Set')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="modal-info-label">X-XSS-Protection</div>
-                <div class="modal-info-value">${headers.headers?.xXssProtection || 'Not Set'}</div>
+                <div class="modal-info-value">${escapeHtml(headers.headers?.xXssProtection || 'Not Set')}</div>
             </div>
         </div>
     `;
@@ -671,7 +727,7 @@ function createRobotsSitemapHTML(data) {
                 <div class="modal-info-value">
                     ${robots.exists ? 
                         `<span class="status-success">✓ Found</span><br>
-                         <a href="${robots.url || '#'}" target="_blank">${robots.url || '-'}</a><br>
+                         <a href="${escapeHtml(robots.url || '#')}" target="_blank">${escapeHtml(robots.url || '-')}</a><br>
                          ${robots.content ? `<details><summary>Preview</summary><pre style="margin-top: 10px; font-size: 0.75rem; max-height: 200px; overflow: auto;">${escapeHtml(robots.content)}</pre></details>` : ''}` : 
                         `<span class="status-warning">✗ Not found</span>`}
                 </div>
@@ -681,7 +737,7 @@ function createRobotsSitemapHTML(data) {
                 <div class="modal-info-value">
                     ${sitemap.exists ? 
                         `<span class="status-success">✓ Found</span><br>
-                         <a href="${sitemap.url || '#'}" target="_blank">${sitemap.url || '-'}</a><br>
+                         <a href="${escapeHtml(sitemap.url || '#')}" target="_blank">${escapeHtml(sitemap.url || '-')}</a><br>
                          ${sitemap.urlCount ? `URLs: ${sitemap.urlCount}` : ''}` : 
                         `<span class="status-warning">✗ Not found</span>`}
                 </div>
@@ -720,7 +776,7 @@ function createRecommendationsHTML(data) {
     
     return `
         <div class="modal-info-item" style="margin-bottom: 15px;">
-            <div class="modal-info-label">Priority: ${rec.priority || 'Medium'}</div>
+            <div class="modal-info-label">Priority: ${escapeHtml(rec.priority || 'Medium')}</div>
             <div class="modal-info-value">${rec.total || 0} recommendations found</div>
         </div>
         ${rec.items && rec.items.length > 0 ? rec.items.map(item => `<div class="recommendation-item">💡 ${escapeHtml(item)}</div>`).join('') : '<div>No specific recommendations</div>'}
@@ -728,21 +784,36 @@ function createRecommendationsHTML(data) {
 }
 
 function closeModal() {
-    document.getElementById('detailModal').style.display = 'none';
+    const modal = document.getElementById('detailModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 function clearAll() {
     allAnalysisResults = [];
-    document.getElementById('resultsTableBody').innerHTML = '';
-    document.getElementById('resultsContainer').style.display = 'none';
-    document.getElementById('empty').style.display = 'block';
-    document.getElementById('exportButtons').style.display = 'none';
-    document.getElementById('singleUrl').value = '';
-    document.getElementById('batchUrls').value = '';
+    
+    const resultsTableBody = document.getElementById('resultsTableBody');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const emptyDiv = document.getElementById('empty');
+    const exportButtons = document.getElementById('exportButtons');
+    const singleUrl = document.getElementById('singleUrl');
+    const batchUrls = document.getElementById('batchUrls');
+    
+    if (resultsTableBody) resultsTableBody.innerHTML = '';
+    if (resultsContainer) resultsContainer.style.display = 'none';
+    if (emptyDiv) emptyDiv.style.display = 'block';
+    if (exportButtons) exportButtons.style.display = 'none';
+    if (singleUrl) singleUrl.value = '';
+    if (batchUrls) batchUrls.value = '';
+    
     showNotification('All results cleared', 'info');
 }
 
 function loadExamples() {
+    const batchUrls = document.getElementById('batchUrls');
+    if (!batchUrls) return;
+    
     const examples = [
         'https://www.google.com',
         'https://github.com',
@@ -753,7 +824,7 @@ function loadExamples() {
         'https://www.amazon.com',
         'https://www.netflix.com'
     ];
-    document.getElementById('batchUrls').value = examples.join('\n');
+    batchUrls.value = examples.join('\n');
     showNotification('Example URLs loaded. Click "Analyze All URLs" to start.', 'info');
 }
 
@@ -851,7 +922,7 @@ function showNotification(message, type = 'info') {
         bottom: 20px;
         right: 20px;
         padding: 12px 24px;
-        background: ${colors[type]};
+        background: ${colors[type] || colors.info};
         color: white;
         border-radius: 10px;
         z-index: 1000;
@@ -863,7 +934,11 @@ function showNotification(message, type = 'info') {
     `;
     
     document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 4000);
+    setTimeout(() => {
+        if (notification && notification.remove) {
+            notification.remove();
+        }
+    }, 4000);
 }
 
 function escapeHtml(text) {
@@ -928,6 +1003,57 @@ style.textContent = `
         background: #fff3e0;
         border-left: 3px solid #ed8936;
         border-radius: 5px;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+    
+    .status-success {
+        background: #48bb78;
+        color: white;
+    }
+    
+    .status-error {
+        background: #f56565;
+        color: white;
+    }
+    
+    .status-warning {
+        background: #ed8936;
+        color: white;
+    }
+    
+    .title-cell, .canonical-cell, .amp-cell {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .url-cell {
+        max-width: 200px;
+        word-break: break-all;
+    }
+    
+    .view-details-btn {
+        padding: 5px 12px;
+        background: #e2e8f0;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: all 0.2s;
+    }
+    
+    .view-details-btn:hover {
+        background: #667eea;
+        color: white;
+        transform: scale(1.05);
     }
 `;
 document.head.appendChild(style);
