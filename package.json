@@ -1,32 +1,29 @@
 {
-  "name": "web-meta-analyzer-pro",
-  "version": "2.0.0",
-  "description": "Complete Web Meta Analyzer - Check Title, AMP, Canonical, SSL, DNS, Whois, Security Headers, Social Tags, and More",
-  "main": "api/check-domain.js",
+  "name": "web-meta-analyzer",
+  "version": "1.0.0",
+  "description": "Domain/Website Meta Analyzer with VPN Indonesia validation",
+  "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel deploy --prod"
+    "deploy": "vercel deploy"
   },
   "keywords": [
-    "seo-tools",
+    "seo",
     "meta-analyzer",
-    "amp-checker",
-    "canonical-checker",
-    "ssl-checker",
-    "dns-lookup",
-    "whois-checker",
-    "security-headers",
-    "social-tags",
-    "structured-data"
+    "domain-checker",
+    "vpn-validation"
   ],
-  "author": "Your Name",
+  "author": "",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dns": "^0.2.2",
     "node-fetch": "^2.7.0",
-    "whois": "^2.14.0",
-    "dns": "^0.2.2"
+    "validator": "^13.11.0",
+    "whois": "^2.14.0"
   },
   "devDependencies": {
-    "vercel": "^33.0.0"
+    "@vercel/node": "^3.0.0"
   }
 }
