@@ -1,15 +1,26 @@
 {
   "name": "web-meta-analyzer",
   "version": "1.0.0",
-  "description": "Web Meta Analyzer - Check Title, AMP, Canonical URL and HTTP Status",
+  "description": "Advanced Web Meta Analyzer - Check Title, AMP, Canonical URL & HTTP Status with CORS Proxy & User-Agent Rotation",
   "main": "api/check-domain.js",
   "scripts": {
-    "start": "vercel dev"
+    "dev": "vercel dev",
+    "deploy": "vercel deploy --prod"
   },
-  "keywords": ["seo", "analyzer", "amp", "canonical", "meta-tag"],
+  "keywords": [
+    "seo-tools",
+    "meta-analyzer",
+    "amp-checker",
+    "canonical-checker",
+    "web-analyzer",
+    "cors-proxy"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
   }
 }
