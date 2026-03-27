@@ -2,123 +2,262 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Meta Analyzer Pro | Batch URL Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Professional Web Meta Analyzer - Batch URL Analysis Tool with SSL, DNS, Security Headers, and SEO Insights">
+    <meta name="keywords" content="SEO tools, meta analyzer, batch URL checker, AMP validator, canonical checker">
+    <meta name="author" content="Web Meta Analyzer Pro">
+    <title>Web Meta Analyzer Pro | Professional SEO & Security Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    <div class="bg-particles"></div>
+
     <div class="container">
-        <header>
-            <h1>🔍 Web Meta Analyzer Pro</h1>
-            <p>Batch URL Analysis | Check Title, Canonical, AMP & Status for Multiple URLs</p>
-            <div class="tech-badges">
-                <span class="tech-badge">📊 Batch Analysis</span>
-                <span class="tech-badge">🔍 Title Checker</span>
-                <span class="tech-badge">🔗 Canonical Detector</span>
-                <span class="tech-badge">⚡ AMP Checker</span>
-                <span class="tech-badge">📈 Status Code</span>
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-badge">
+                <span class="badge-glow">✨ PRO TOOL</span>
+            </div>
+            <h1 class="header-title">
+                <span class="title-gradient">Web Meta</span> Analyzer Pro
+            </h1>
+            <p class="header-subtitle">Professional Batch URL Analysis Tool with Advanced SEO & Security Insights</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Batch Analysis</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tag"></i>
+                    <span>Meta Tags</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-link"></i>
+                    <span>Canonical URL</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>AMP Validator</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <span>SSL Checker</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security Headers</span>
+                </div>
             </div>
         </header>
 
-        <div class="card">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('single')">🔍 Single URL</button>
-                <button class="tab-btn" onclick="switchTab('batch')">📚 Batch URLs (Up to 1000)</button>
+        <!-- Main Card -->
+        <div class="main-card">
+            <!-- Tabs Navigation -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="single">
+                    <i class="fas fa-globe"></i>
+                    <span>Single URL</span>
+                </button>
+                <button class="tab-btn" data-tab="batch">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Batch URLs</span>
+                    <span class="tab-badge">Up to 1000</span>
+                </button>
             </div>
 
-            <div id="singleTab" class="tab-content active">
-                <div class="input-group">
-                    <input type="text" id="singleUrl" placeholder="https://example.com or example.com" autocomplete="off">
-                    <button onclick="checkSingle()" class="btn-primary">🚀 Analyze</button>
+            <!-- Single URL Tab -->
+            <div id="singleTab" class="tab-pane active">
+                <div class="input-wrapper">
+                    <div class="input-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <input type="text" id="singleUrl" class="modern-input" placeholder="https://example.com or example.com" autocomplete="off">
+                    <button onclick="checkSingle()" class="btn-primary btn-glow">
+                        <i class="fas fa-rocket"></i>
+                        <span>Analyze</span>
+                    </button>
                 </div>
             </div>
 
-            <div id="batchTab" class="tab-content">
-                <textarea id="batchUrls" rows="6" placeholder="Enter multiple URLs (one per line)&#10;Max 1000 URLs&#10;&#10;https://google.com&#10;https://github.com&#10;https://stackoverflow.com&#10;https://bbc.com"></textarea>
+            <!-- Batch URL Tab -->
+            <div id="batchTab" class="tab-pane">
+                <div class="textarea-wrapper">
+                    <div class="textarea-header">
+                        <i class="fas fa-list-ul"></i>
+                        <span>Enter URLs (one per line)</span>
+                        <span class="url-counter" id="urlCounter">0 URLs</span>
+                    </div>
+                    <textarea id="batchUrls" class="modern-textarea" rows="6" placeholder="https://google.com&#10;https://github.com&#10;https://stackoverflow.com&#10;https://bbc.com"></textarea>
+                </div>
                 <div class="button-group">
-                    <button onclick="checkBatch()" class="btn-primary">📊 Analyze All URLs</button>
-                    <button onclick="loadExamples()" class="btn-secondary">📝 Load Examples</button>
-                    <button onclick="clearAll()" class="btn-clear">🗑️ Clear All</button>
+                    <button onclick="checkBatch()" class="btn-primary btn-large">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Start Batch Analysis</span>
+                    </button>
+                    <button onclick="loadExamples()" class="btn-secondary">
+                        <i class="fas fa-code-branch"></i>
+                        <span>Load Examples</span>
+                    </button>
+                    <button onclick="clearAll()" class="btn-danger">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Clear All</span>
+                    </button>
                 </div>
-                <div class="info-note">
-                    💡 Tips: Enter up to 1000 URLs. Each URL will be analyzed and displayed in the table below.
-                    Click on any row to view complete details.
+                <div class="info-card">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="info-content">
+                        <strong>Pro Tips:</strong> Enter up to 1000 URLs for batch analysis. Each URL will be checked for Title, Canonical, AMP, SSL, DNS, Security Headers, and more. Click any row for detailed insights.
+                    </div>
                 </div>
             </div>
 
-            <div class="options">
+            <!-- Options Bar -->
+            <div class="options-bar">
                 <div class="options-left">
-                    <label class="checkbox">
+                    <label class="toggle-switch">
                         <input type="checkbox" id="useProxy" checked>
-                        <span>🔄 Use CORS Proxy (fix CORS issues)</span>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">
+                            <i class="fas fa-network-wired"></i>
+                            CORS Proxy
+                        </span>
                     </label>
                 </div>
-                <div class="export-buttons" id="exportButtons" style="display: none;">
-                    <button onclick="exportToCSV()" class="btn-export">📥 Export CSV</button>
-                    <button onclick="exportToJSON()" class="btn-export">📄 Export JSON</button>
+                <div class="options-right" id="exportButtons" style="display: none;">
+                    <button onclick="exportToCSV()" class="btn-outline">
+                        <i class="fas fa-file-csv"></i>
+                        <span>Export CSV</span>
+                    </button>
+                    <button onclick="exportToJSON()" class="btn-outline">
+                        <i class="fas fa-file-code"></i>
+                        <span>Export JSON</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div id="loading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <p id="loadingText">Analyzing URLs...</p>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading-overlay" style="display: none;">
+            <div class="loading-card">
+                <div class="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+                <p id="loadingText" class="loading-text">Analyzing URLs...</p>
+                <div class="progress-wrapper">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                    <p id="progressCount" class="progress-count">0 / 0 URLs</p>
+                </div>
             </div>
-            <p id="progressCount" style="margin-top: 10px; font-size: 0.9rem;"></p>
         </div>
 
-        <!-- Results Table -->
-        <div id="resultsContainer" class="results-container" style="display: none;">
+        <!-- Results Section -->
+        <div id="resultsContainer" class="results-section" style="display: none;">
             <div class="results-header">
-                <h3>📊 Analysis Results</h3>
-                <div class="stats-summary" id="statsSummary"></div>
+                <div class="results-title">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Analysis Results</h3>
+                </div>
+                <div class="stats-cards" id="statsSummary"></div>
             </div>
-            <div class="table-wrapper">
-                <table id="resultsTable">
+            
+            <div class="table-container">
+                <table class="modern-table" id="resultsTable">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">#</th>
-                            <th style="width: 250px;">Domain / URL</th>
-                            <th style="width: 80px;">Status</th>
-                            <th style="min-width: 200px;">Title</th>
-                            <th style="min-width: 200px;">Canonical URL</th>
-                            <th style="width: 150px;">AMP Version</th>
-                            <th style="width: 80px;">Action</th>
+                            <th class="col-nr">#</th>
+                            <th class="col-url">Domain / URL</th>
+                            <th class="col-status">Status</th>
+                            <th class="col-title">Title</th>
+                            <th class="col-canonical">Canonical URL</th>
+                            <th class="col-amp">AMP Version</th>
+                            <th class="col-action">Action</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody">
+                        <tr class="placeholder-row">
+                            <td colspan="7">
+                                <div class="placeholder-content">
+                                    <i class="fas fa-chart-simple"></i>
+                                    <p>No data yet. Start analysis to see results.</p>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div id="empty" class="empty">
-            <div class="empty-icon">📭</div>
-            <h3>No Data Yet</h3>
-            <p>Enter URLs above to start analyzing. Results will appear here in a table format.</p>
-            <p class="empty-hint">Click on "View Details" to see complete analysis including SSL, DNS, Security Headers, and more.</p>
+        <!-- Empty State -->
+        <div id="empty" class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>Ready to Analyze</h3>
+            <p>Enter URLs above to get comprehensive website analysis</p>
+            <div class="empty-features">
+                <span><i class="fas fa-check-circle"></i> Meta Tags</span>
+                <span><i class="fas fa-check-circle"></i> SSL Certificate</span>
+                <span><i class="fas fa-check-circle"></i> DNS Records</span>
+                <span><i class="fas fa-check-circle"></i> Security Headers</span>
+                <span><i class="fas fa-check-circle"></i> Social Tags</span>
+                <span><i class="fas fa-check-circle"></i> AMP Validation</span>
+            </div>
         </div>
 
         <!-- Modal for Detailed View -->
         <div id="detailModal" class="modal">
-            <div class="modal-content">
+            <div class="modal-container">
                 <div class="modal-header">
-                    <h2 id="modalTitle">Website Details</h2>
-                    <span class="modal-close" onclick="closeModal()">&times;</span>
+                    <div class="modal-title">
+                        <i class="fas fa-chart-pie"></i>
+                        <h2 id="modalTitle">Website Details</h2>
+                    </div>
+                    <button class="modal-close" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body" id="modalBody">
-                    <!-- Detailed content will be loaded here -->
-                    <div class="loading-spinner">Loading details...</div>
+                    <div class="modal-loading">
+                        <div class="loading-spinner-small"></div>
+                        <p>Loading comprehensive analysis...</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <footer>
-            <p>Powered by Vercel Serverless Functions | Batch URL Analyzer</p>
-            <p class="footer-features">✓ Title Checker | ✓ Canonical Detector | ✓ AMP Checker | ✓ HTTP Status | ✓ SSL | ✓ DNS | ✓ Security Headers</p>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Web Meta Analyzer Pro</span>
+                </div>
+                <div class="footer-features">
+                    <span><i class="fas fa-check"></i> Title Checker</span>
+                    <span><i class="fas fa-check"></i> Canonical Detector</span>
+                    <span><i class="fas fa-check"></i> AMP Validator</span>
+                    <span><i class="fas fa-check"></i> HTTP Status</span>
+                    <span><i class="fas fa-check"></i> SSL Checker</span>
+                    <span><i class="fas fa-check"></i> DNS Lookup</span>
+                    <span><i class="fas fa-check"></i> Security Headers</span>
+                </div>
+                <div class="footer-copyright">
+                    <p>Powered by Vercel Serverless Functions | Professional SEO & Security Analysis Tool</p>
+                    <p class="version">v2.0.0 | Real-time Batch Processing</p>
+                </div>
+            </div>
         </footer>
     </div>
 
