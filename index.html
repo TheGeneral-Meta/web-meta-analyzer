@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced Web Meta Analyzer - Check Title, AMP, Canonical URL & HTTP Status with CORS Proxy & User-Agent Rotation">
+    <meta name="keywords" content="seo tools, meta analyzer, amp checker, canonical checker, web analyzer">
+    <title>Web Meta Analyzer Pro | SEO & AMP Checker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Web Meta Analyzer Pro</h1>
+            <p>Advanced Title, AMP, Canonical URL & HTTP Status Checker</p>
+            <div class="tech-badges">
+                <span class="tech-badge">⚡ DOMParser</span>
+                <span class="tech-badge">🔄 CORS Proxy</span>
+                <span class="tech-badge">🎭 User-Agent Rotate</span>
+                <span class="tech-badge">📊 Real-time</span>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('single')">🔍 Single URL</button>
+                <button class="tab-btn" onclick="switchTab('batch')">📚 Batch URLs</button>
+            </div>
+
+            <div id="singleTab" class="tab-content active">
+                <div class="input-group">
+                    <input type="text" id="singleUrl" placeholder="https://example.com or example.com" autocomplete="off">
+                    <button onclick="checkSingle()" class="btn-primary">🚀 Check URL</button>
+                </div>
+            </div>
+
+            <div id="batchTab" class="tab-content">
+                <textarea id="batchUrls" rows="5" placeholder="Enter multiple URLs (one per line)&#10;https://google.com&#10;https://github.com&#10;https://stackoverflow.com"></textarea>
+                <div class="button-group">
+                    <button onclick="checkBatch()" class="btn-primary">📊 Check All URLs</button>
+                    <button onclick="loadExamples()" class="btn-secondary">📝 Load Examples</button>
+                </div>
+            </div>
+
+            <div class="options">
+                <div class="options-left">
+                    <label class="checkbox">
+                        <input type="checkbox" id="useProxy" checked>
+                        <span>🔄 Use CORS Proxy (fix CORS issues)</span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" id="showTime" checked>
+                        <span>⏱️ Show Response Time</span>
+                    </label>
+                </div>
+                <button onclick="clearAll()" class="btn-clear">🗑️ Clear Results</button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing URLs...</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <div class="results-header">
+                <div id="summary" class="summary"></div>
+                <div class="export-buttons">
+                    <button onclick="exportCSV()" class="btn-export">📥 Export CSV</button>
+                    <button onclick="exportJSON()" class="btn-export">📄 Export JSON</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>URL</th>
+                            <th>Status</th>
+                            <th>Title</th>
+                            <th>Canonical URL</th>
+                            <th>AMP Version</th>
+                            <th id="timeHeader">Response Time</th>
+                            <th>Checked At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="empty" class="empty">
+            <div class="empty-icon">📭</div>
+            <h3>No Data Yet</h3>
+            <p>Enter a URL above to start checking website meta information</p>
+            <p class="empty-hint">Supports: HTTP/HTTPS, Multiple URLs, CORS Proxy, User-Agent Rotation</p>
+        </div>
+
+        <footer>
+            <p>Powered by Vercel Serverless Functions | Advanced Meta Analyzer</p>
+            <p class="footer-features">⚡ Title Checker | 🔗 Canonical Detector | ⚡ AMP Detector | 🌐 CORS Proxy | 🎭 User-Agent Rotate</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
